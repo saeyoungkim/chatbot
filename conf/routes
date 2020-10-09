@@ -1,2 +1,2 @@
 GET                 /                                       @controllers.HelloController.hello
-GET                 /webhook                                @controllers.WebhookController.webhook
+POST                /webhook                                @controllers.WebhookController.webhook

@@ -33,6 +33,9 @@ class LineVerifier @Inject()(
     val key: SecretKeySpec = new SecretKeySpec(ChannelSecret.getBytes(), hmacSHA256)
     val mac: Mac = Mac.getInstance(hmacSHA256)
     mac.init(key)
+
+    println(request.body.asText)
+
     val source: Array[Byte] = request.body.asText
       .getOrElse(throw new RuntimeException("There is no request body."))
       .getBytes(StandardCharsets.UTF_8)

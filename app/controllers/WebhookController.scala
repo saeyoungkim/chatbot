@@ -14,7 +14,6 @@ class WebhookController @Inject()(
   with Logger {
   def webhook() = Action.async { implicit req =>
     logger.info("message received")
-    println(req.body.toString)
 
     if(lineVerifier.validateSignature) Future.successful(Ok(Json.obj("status"->JsNumber(OK), "message"->"accepted")))
     else Future.successful(Ok(Json.obj("status"->JsNumber(BAD_REQUEST), "message"->"unaccepted")))

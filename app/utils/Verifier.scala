@@ -11,6 +11,8 @@ import javax.inject.Inject
 import play.api.Configuration
 import play.api.mvc.{AnyContent, Request}
 
+import com.google.inject.Singleton
+
 sealed abstract class Verifier {
   protected val conf: Configuration
   protected val hmacSHA256: String = "HmacSHA256"

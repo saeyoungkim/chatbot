@@ -17,7 +17,7 @@ sealed abstract class Verifier {
   protected val conf: Configuration
   protected val hmacSHA256: String = "HmacSHA256"
   // 署名を検証する→Defaultはfalseにすることで、Defaultをそのまま使えるようにする
-  def validateSignature(request: Request[AnyContent]): Boolean = false
+  def validateSignature()(implicit request: Request[AnyContent]): Boolean = false
 }
 
 @Singleton
@@ -27,15 +27,13 @@ class LineVerifier @Inject()(
   final private val ChannelSecret = conf.get[String](ConfPath.Line.ChannelSecretPath)
   final private val XLineSignature = "X-Line-Signature"
 
-  override def validateSignature(request: Request[AnyContent]): Boolean = {
+  override def validateSignature()(implicit request: Request[AnyContent]): Boolean = {
+    println(request.body.toString)
     // Lineのガイドまま
     // https://developers.line.biz/ja/reference/messaging-api/#signature-validation
     val key: SecretKeySpec = new SecretKeySpec(ChannelSecret.getBytes(), hmacSHA256)
     val mac: Mac = Mac.getInstance(hmacSHA256)
     mac.init(key)
-
-    println(request.body.asText)
-
     val source: Array[Byte] = request.body.asText
       .getOrElse(throw new RuntimeException("There is no request body."))
       .getBytes(StandardCharsets.UTF_8)

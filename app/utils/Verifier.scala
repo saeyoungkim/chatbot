@@ -27,6 +27,7 @@ class LineVerifier @Inject()(
   final private val ChannelSecret = conf.get[String](ConfPath.Line.ChannelSecretPath)
   final private val XLineSignature = "X-Line-Signature"
 
+  // TODO Booleanではなく例外が投げられたらResPonseとして例外別に正しいResponseを投げれるようにする
   override def validateSignature()(implicit request: Request[AnyContent]): Boolean = {
     // Lineのガイドまま
     // https://developers.line.biz/ja/reference/messaging-api/#signature-validation
@@ -34,7 +35,6 @@ class LineVerifier @Inject()(
     val mac: Mac = Mac.getInstance(hmacSHA256)
     mac.init(key)
     val source: Array[Byte] = request.body.asJson.map { json =>
-      println(Json.stringify(json))
       Json.stringify(json)
     }.getOrElse {
       throw new RuntimeException("There is no request body.")
@@ -42,9 +42,6 @@ class LineVerifier @Inject()(
     val signature: String = Base64.getEncoder.encodeToString(mac.doFinal(source))
 
     val xLineSignature: String = request.headers.get(XLineSignature).getOrElse("")
-
-    println(signature)
-    println(xLineSignature)
 
     signature == xLineSignature
   }

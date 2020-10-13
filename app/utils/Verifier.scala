@@ -17,7 +17,7 @@ sealed abstract class Verifier {
   protected val conf: Configuration
   protected val hmacSHA256: String = "HmacSHA256"
   // 署名を検証する→Defaultはfalseにすることで、Defaultをそのまま使えるようにする
-  def validateSignature()(implicit request: Request[AnyContent]): Boolean = false
+  def validateSignature(request: Request[AnyContent]): Boolean = false
 }
 
 @Singleton

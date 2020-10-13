@@ -50,6 +50,7 @@ class LineVerifier @Inject()(
 
     val xLineSignature: String = request.headers.get(XLineSignature).getOrElse("")
 
+    println(ChannelSecret)
     println(signature)
     println(xLineSignature)
 

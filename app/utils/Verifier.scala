@@ -28,13 +28,22 @@ class LineVerifier @Inject()(
   final private val XLineSignature = "X-Line-Signature"
 
   override def validateSignature()(implicit request: Request[AnyContent]): Boolean = {
-    println(request.body.toString)
     // Lineのガイドまま
     // https://developers.line.biz/ja/reference/messaging-api/#signature-validation
+
+    implicit class RequestBodyToString(val req: Request[AnyContent]) {
+      def asString: Option[String] = {
+        req.body.toString match {
+          case null || "" => None
+          case str => Some(str)
+        }
+      }
+    }
+
     val key: SecretKeySpec = new SecretKeySpec(ChannelSecret.getBytes(), hmacSHA256)
     val mac: Mac = Mac.getInstance(hmacSHA256)
     mac.init(key)
-    val source: Array[Byte] = request.body.asText
+    val source: Array[Byte] = request.asString
       .getOrElse(throw new RuntimeException("There is no request body."))
       .getBytes(StandardCharsets.UTF_8)
     val signature: String = Base64.getEncoder.encodeToString(mac.doFinal(source))

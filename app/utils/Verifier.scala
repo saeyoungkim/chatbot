@@ -50,6 +50,9 @@ class LineVerifier @Inject()(
 
     val xLineSignature: String = request.headers.get(XLineSignature).getOrElse("")
 
+    println(signature)
+    println(xLineSignature)
+
     signature == xLineSignature
   }
 }

@@ -34,7 +34,7 @@ class LineVerifier @Inject()(
     implicit class RequestBodyToString(val req: Request[AnyContent]) {
       def asString: Option[String] = {
         req.body.toString match {
-          case null || "" => None
+          case null | "" => None
           case str => Some(str)
         }
       }

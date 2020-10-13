@@ -10,8 +10,8 @@ import java.util.Base64
 import javax.inject.Inject
 import play.api.Configuration
 import play.api.mvc.{AnyContent, Request}
-
 import com.google.inject.Singleton
+import play.api.libs.json.Json
 
 sealed abstract class Verifier {
   protected val conf: Configuration
@@ -30,27 +30,18 @@ class LineVerifier @Inject()(
   override def validateSignature()(implicit request: Request[AnyContent]): Boolean = {
     // Lineのガイドまま
     // https://developers.line.biz/ja/reference/messaging-api/#signature-validation
-
-    implicit class RequestBodyToString(val req: Request[AnyContent]) {
-      def asString: Option[String] = {
-        req.body.toString match {
-          case null | "" => None
-          case str => Some(str)
-        }
-      }
-    }
-
     val key: SecretKeySpec = new SecretKeySpec(ChannelSecret.getBytes(), hmacSHA256)
     val mac: Mac = Mac.getInstance(hmacSHA256)
     mac.init(key)
-    val source: Array[Byte] = request.asString
-      .getOrElse(throw new RuntimeException("There is no request body."))
-      .getBytes(StandardCharsets.UTF_8)
+    val source: Array[Byte] = request.body.asJson.map { json =>
+      Json.prettyPrint(json)
+    }.getOrElse {
+      throw new RuntimeException("There is no request body.")
+    }.getBytes(StandardCharsets.UTF_8)
     val signature: String = Base64.getEncoder.encodeToString(mac.doFinal(source))
 
     val xLineSignature: String = request.headers.get(XLineSignature).getOrElse("")
 
-    println(ChannelSecret)
     println(signature)
     println(xLineSignature)
 

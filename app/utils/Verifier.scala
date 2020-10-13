@@ -38,7 +38,7 @@ class LineVerifier @Inject()(
       Json.stringify(json)
     }.getOrElse {
       throw new RuntimeException("There is no request body.")
-    }.getBytes("UTF_8")
+    }.getBytes(StandardCharsets.UTF_8)
     val signature: String = Base64.getEncoder.encodeToString(mac.doFinal(source))
 
     val xLineSignature: String = request.headers.get(XLineSignature).getOrElse("")

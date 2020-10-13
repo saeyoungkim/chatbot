@@ -27,7 +27,7 @@ class LineVerifier @Inject()(
   final private val ChannelSecret = conf.get[String](ConfPath.Line.ChannelSecretPath)
   final private val XLineSignature = "X-Line-Signature"
 
-  override def validateSignature()(implicit request: Request[AnyContent]): Boolean = {
+  override def validateSignature(request: Request[AnyContent]): Boolean = {
     // Lineのガイドまま
     // https://developers.line.biz/ja/reference/messaging-api/#signature-validation
     val key: SecretKeySpec = new SecretKeySpec(ChannelSecret.getBytes(), hmacSHA256)

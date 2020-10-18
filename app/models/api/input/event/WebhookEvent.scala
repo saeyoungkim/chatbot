@@ -17,12 +17,12 @@ case class WebhookEvent(
 )
 
 object WebhookEvent {
-  implicit val webhookEventReads = (
-    (__ \ "replyToken").readNullable[String] and
-      (__ \ "type").read[WebhookEventType] and
-      (__ \ "mode").read[Mode] and
-      (__ \ "timestamp").read[Long] and
-      (__ \ "source").read[Source] and
-      (__ \ "type").readNullable[Message]
-  )(apply _)
+  implicit val webhookEventFormats = (
+    (__ \ "replyToken").formatNullable[String] and
+      (__ \ "type").format[WebhookEventType] and
+      (__ \ "mode").format[Mode] and
+      (__ \ "timestamp").format[Long] and
+      (__ \ "source").format[Source] and
+      (__ \ "type").formatNullable[Message]
+  )(apply _, unlift(unapply _))
 }

@@ -1,10 +1,10 @@
 package models.api.input.event.source
 
-import utils.props.enums.{Enum, EnumsReadableString}
+import utils.props.enums.{Enum, EnumsFormattableString}
 
 sealed abstract class SourceType(val code: String) extends Enum[String]
 
-object SourceType extends EnumsReadableString[SourceType]{
+object SourceType extends EnumsFormattableString[SourceType]{
 
   case object User extends SourceType("user")
   case object Room extends SourceType("room")

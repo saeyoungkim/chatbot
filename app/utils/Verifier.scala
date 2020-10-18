@@ -8,14 +8,12 @@ import javax.crypto.spec.SecretKeySpec
 import java.util.Base64
 
 import com.google.inject.Singleton
-
 import javax.inject.Inject
-
 import play.api.Configuration
 import play.api.mvc.{AnyContent, Request}
 import play.api.libs.json.Json
-
 import models.api.input.Event
+import models.api.input.event.WebhookEvent
 import utils.wrapper.JsonWrapper._
 
 sealed abstract class Verifier {
@@ -52,14 +50,13 @@ class LineVerifier @Inject()(
   }
 
   // TODO Booleanではなく例外が投げられたらresponseとして例外別に正しいresponseを投げれるようにする
-  // TODO ジェネリックなJsonに対してValidSignatureできるように
-  def validateSignature(request: Request[Event]): Boolean = {
+  override def validateSignature(request: Request[WebhookEvent]): Boolean = {
     // Lineのガイドまま
     // https://developers.line.biz/ja/reference/messaging-api/#signature-validation
     val key: SecretKeySpec = new SecretKeySpec(ChannelSecret.getBytes(), hmacSHA256)
     val mac: Mac = Mac.getInstance(hmacSHA256)
     mac.init(key)
-    val source: Array[Byte] = Json.stringify(request.body.toJson).getBytes(StandardCharsets.UTF_8)
+    val source: Array[Byte] = Json.stringify(Json.toJson(request.body)).getBytes(StandardCharsets.UTF_8)
     val signature: String = Base64.getEncoder.encodeToString(mac.doFinal(source))
 
     val xLineSignature: String = request.headers.get(XLineSignature).getOrElse("")

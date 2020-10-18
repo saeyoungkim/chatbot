@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject.Inject
-import models.api.input.Event
+import models.api.input.event.WebhookEvent
 import play.api.libs.json.{JsNumber, Json}
 import play.api.mvc.{AbstractController, ControllerComponents}
 import utils.{LineVerifier, Logger}
@@ -13,7 +13,7 @@ class WebhookController @Inject()(
   lineVerifier: LineVerifier
 ) extends AbstractController(cc)
   with Logger {
-  def webhook() = Action.async(parse.json[Event]){ implicit req =>
+  def webhook() = Action.async(parse.json[WebhookEvent]){ implicit req =>
     logger.info("message received")
 
     if(lineVerifier.validateSignature(req)) Future.successful(Ok(Json.obj("status"->JsNumber(OK), "message"->"accepted")))

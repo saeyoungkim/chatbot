@@ -11,10 +11,10 @@ case class Source(
 )
 
 object Source {
-  implicit val reads = (
-    (__ \ "type").read[SourceType] and
-      (__ \ "roomId").readNullable[String] and
-      (__ \ "groupId").readNullable[String] and
-      (__ \ "userId").read[String]
-  )(apply _)
+  implicit val sourceFormats = (
+    (__ \ "type").format[SourceType] and
+      (__ \ "roomId").formatNullable[String] and
+      (__ \ "groupId").formatNullable[String] and
+      (__ \ "userId").format[String]
+  )(apply _, unlift(unapply _))
 }

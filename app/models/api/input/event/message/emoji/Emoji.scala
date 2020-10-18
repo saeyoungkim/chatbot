@@ -10,5 +10,5 @@ case class Emoji(
 )
 
 object Emoji {
-  implicit val emojiReads = Json.reads[Emoji]
+  implicit val emojiFormats = Json.format[Emoji]
 }

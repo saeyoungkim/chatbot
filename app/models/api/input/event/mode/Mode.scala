@@ -1,10 +1,10 @@
 package models.api.input.event.mode
 
-import utils.props.enums.{Enum, EnumsReadableString}
+import utils.props.enums.{Enum, EnumsFormattableString}
 
 sealed abstract class Mode(val code: String) extends Enum[String]
 
-object Mode extends EnumsReadableString[Mode] {
+object Mode extends EnumsFormattableString[Mode] {
 
   case object Active extends Mode("active")
   case object Stanby extends Mode("stanby")

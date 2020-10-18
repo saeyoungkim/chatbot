@@ -1,10 +1,10 @@
 package models.api.input.event.message
 
-import utils.props.enums.{Enum, EnumsReadableString}
+import utils.props.enums.{Enum, EnumsFormattableString}
 
 sealed abstract class MessageType(val code: String) extends Enum[String]
 
-object MessageType extends EnumsReadableString[MessageType] {
+object MessageType extends EnumsFormattableString[MessageType] {
 
   case object Text extends MessageType("text")
   case object Image extends MessageType("image")

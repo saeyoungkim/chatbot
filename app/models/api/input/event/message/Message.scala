@@ -13,10 +13,10 @@ case class Message(
 )
 
 object Message {
-  implicit val messageReads = (
-    (__ \ "id").read[String] and
-      (__ \ "type").read[MessageType] and
-      (__ \ "text").readNullable[String] and
-      (__ \ "emojis").read[Seq[Emoji]]
-  )(apply _)
+  implicit val messageFormats = (
+    (__ \ "id").format[String] and
+      (__ \ "type").format[MessageType] and
+      (__ \ "text").formatNullable[String] and
+      (__ \ "emojis").format[Seq[Emoji]]
+  )(apply _, unlift(unapply _))
 }

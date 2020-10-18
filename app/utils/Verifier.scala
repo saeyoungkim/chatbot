@@ -11,6 +11,7 @@ import javax.inject.Inject
 import play.api.Configuration
 import play.api.mvc.{AnyContent, Request}
 import com.google.inject.Singleton
+import models.api.input.Event
 import play.api.libs.json.Json
 
 sealed abstract class Verifier {
@@ -27,7 +28,7 @@ class LineVerifier @Inject()(
   final private val ChannelSecret = conf.get[String](ConfPath.Line.ChannelSecretPath)
   final private val XLineSignature = "X-Line-Signature"
 
-  // TODO Booleanではなく例外が投げられたらResPonseとして例外別に正しいResponseを投げれるようにする
+  // TODO Booleanではなく例外が投げられたらresponseとして例外別に正しいresponseを投げれるようにする
   override def validateSignature()(implicit request: Request[AnyContent]): Boolean = {
     // Lineのガイドまま
     // https://developers.line.biz/ja/reference/messaging-api/#signature-validation
@@ -39,6 +40,22 @@ class LineVerifier @Inject()(
     }.getOrElse {
       throw new RuntimeException("There is no request body.")
     }.getBytes(StandardCharsets.UTF_8)
+    val signature: String = Base64.getEncoder.encodeToString(mac.doFinal(source))
+
+    val xLineSignature: String = request.headers.get(XLineSignature).getOrElse("")
+
+    signature == xLineSignature
+  }
+
+  // TODO Booleanではなく例外が投げられたらresponseとして例外別に正しいresponseを投げれるようにする
+  // TODO ジェネリックなJsonに対してValidSignatureできるように
+  def validateSignature(request: Request[Event]): Boolean = {
+    // Lineのガイドまま
+    // https://developers.line.biz/ja/reference/messaging-api/#signature-validation
+    val key: SecretKeySpec = new SecretKeySpec(ChannelSecret.getBytes(), hmacSHA256)
+    val mac: Mac = Mac.getInstance(hmacSHA256)
+    mac.init(key)
+    val source: Array[Byte] = request.body.toString.getBytes(StandardCharsets.UTF_8)
     val signature: String = Base64.getEncoder.encodeToString(mac.doFinal(source))
 
     val xLineSignature: String = request.headers.get(XLineSignature).getOrElse("")

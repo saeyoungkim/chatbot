@@ -7,6 +7,10 @@ import utils.Logger
 class HelloController @Inject()(cc: ControllerComponents) extends AbstractController(cc)
   with Logger {
   def hello: Action[AnyContent] = Action { implicit req =>
-    Ok("hi")
+    throwException()
+  }
+
+  def throwException() = {
+    throw new Exception("error")
   }
 }

@@ -7,12 +7,16 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import java.util.Base64
 
+import com.google.inject.Singleton
+
 import javax.inject.Inject
+
 import play.api.Configuration
 import play.api.mvc.{AnyContent, Request}
-import com.google.inject.Singleton
-import models.api.input.Event
 import play.api.libs.json.Json
+
+import models.api.input.Event
+import utils.wrapper.JsonWrapper._
 
 sealed abstract class Verifier {
   protected val conf: Configuration
@@ -55,7 +59,7 @@ class LineVerifier @Inject()(
     val key: SecretKeySpec = new SecretKeySpec(ChannelSecret.getBytes(), hmacSHA256)
     val mac: Mac = Mac.getInstance(hmacSHA256)
     mac.init(key)
-    val source: Array[Byte] = request.body.toString.getBytes(StandardCharsets.UTF_8)
+    val source: Array[Byte] = Json.stringify(request.body.toJson).getBytes(StandardCharsets.UTF_8)
     val signature: String = Base64.getEncoder.encodeToString(mac.doFinal(source))
 
     val xLineSignature: String = request.headers.get(XLineSignature).getOrElse("")

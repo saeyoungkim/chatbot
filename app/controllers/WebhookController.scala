@@ -18,7 +18,7 @@ class WebhookController @Inject()(
     println(req.body.asJson.map(Json.stringify(_)))
     req.body.asJson.map(_.validate[WebhookEvent] match {
       case JsSuccess(v, _) => println(v)
-      case JsError(_) => println(_)
+      case JsError(errors) => println(errors)
     })
 
     if(lineVerifier.validateSignature) Future.successful(Ok(Json.obj("status"->JsNumber(OK), "message"->"accepted")))

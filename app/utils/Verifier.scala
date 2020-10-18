@@ -12,9 +12,7 @@ import javax.inject.Inject
 import play.api.Configuration
 import play.api.mvc.{AnyContent, Request}
 import play.api.libs.json.Json
-import models.api.input.Event
 import models.api.input.event.WebhookEvent
-import utils.wrapper.JsonWrapper._
 
 sealed abstract class Verifier {
   protected val conf: Configuration
@@ -50,7 +48,7 @@ class LineVerifier @Inject()(
   }
 
   // TODO Booleanではなく例外が投げられたらresponseとして例外別に正しいresponseを投げれるようにする
-  override def validateSignature(request: Request[WebhookEvent]): Boolean = {
+  def validateSignature(request: Request[WebhookEvent]): Boolean = {
     // Lineのガイドまま
     // https://developers.line.biz/ja/reference/messaging-api/#signature-validation
     val key: SecretKeySpec = new SecretKeySpec(ChannelSecret.getBytes(), hmacSHA256)

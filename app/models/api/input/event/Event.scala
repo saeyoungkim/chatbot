@@ -8,12 +8,12 @@ import play.api.libs.json.__
 import play.api.libs.functional.syntax._
 
 case class Event(
-                  replyToken: Option[String],
-                  eventType: EventType,
-                  mode: Mode,
-                  timeStamp: Long,
-                  source: Source,
-                  message: Option[Message]
+  replyToken: Option[String],
+  eventType: EventType,
+  mode: Mode,
+  timeStamp: Long,
+  source: Source,
+  message: Option[Message]
 )
 
 object Event {

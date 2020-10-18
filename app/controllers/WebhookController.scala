@@ -13,10 +13,11 @@ class WebhookController @Inject()(
   lineVerifier: LineVerifier
 ) extends AbstractController(cc)
   with Logger {
-  def webhook() = Action.async(parse.json[WebhookEvent]){ implicit req =>
+  def webhook() = Action.async{ implicit req =>
     logger.info("message received")
+    println(req.body.asJson.map(Json.stringify(_)))
 
-    if(lineVerifier.validateLineSignature(req)) Future.successful(Ok(Json.obj("status"->JsNumber(OK), "message"->"accepted")))
+    if(lineVerifier.validateSignature) Future.successful(Ok(Json.obj("status"->JsNumber(OK), "message"->"accepted")))
     else Future.successful(BadRequest(Json.obj("status"->JsNumber(BAD_REQUEST), "message"->"unaccepted")))
   }
 }

@@ -48,7 +48,7 @@ class LineVerifier @Inject()(
   }
 
   // TODO Booleanではなく例外が投げられたらresponseとして例外別に正しいresponseを投げれるようにする
-  def validateSignature(request: Request[WebhookEvent]): Boolean = {
+  def validateLineSignature(request: Request[WebhookEvent]): Boolean = {
     // Lineのガイドまま
     // https://developers.line.biz/ja/reference/messaging-api/#signature-validation
     val key: SecretKeySpec = new SecretKeySpec(ChannelSecret.getBytes(), hmacSHA256)

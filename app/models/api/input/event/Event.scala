@@ -7,22 +7,22 @@ import models.api.input.event.source.Source
 import play.api.libs.json.__
 import play.api.libs.functional.syntax._
 
-case class WebhookEvent(
-  replyToken: Option[String],
-  eventType: WebhookEventType,
-  mode: Mode,
-  timeStamp: Long,
-  source: Source,
-  message: Option[Message]
+case class Event(
+                  replyToken: Option[String],
+                  eventType: EventType,
+                  mode: Mode,
+                  timeStamp: Long,
+                  source: Source,
+                  message: Option[Message]
 )
 
-object WebhookEvent {
+object Event {
   implicit val webhookEventFormats = (
     (__ \ "replyToken").formatNullable[String] and
-      (__ \ "type").format[WebhookEventType] and
+      (__ \ "type").format[EventType] and
       (__ \ "mode").format[Mode] and
       (__ \ "timestamp").format[Long] and
       (__ \ "source").format[Source] and
-      (__ \ "type").formatNullable[Message]
+      (__ \ "message").formatNullable[Message]
   )(apply _, unlift(unapply _))
 }

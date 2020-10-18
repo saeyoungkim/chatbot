@@ -9,10 +9,10 @@ import java.util.Base64
 
 import com.google.inject.Singleton
 import javax.inject.Inject
+import models.api.input.WebhookEvent
 import play.api.Configuration
 import play.api.mvc.{AnyContent, Request}
 import play.api.libs.json.Json
-import models.api.input.event.WebhookEvent
 
 sealed abstract class Verifier {
   protected val conf: Configuration

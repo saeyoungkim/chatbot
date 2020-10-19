@@ -22,6 +22,10 @@ class ReplyRepositoryWS @Inject()(
   final private val ReplyUrl = conf.get[String](ConfPath.Line.ReplyUrlPath)
 
   def sendEchoTextReply(msg: String, replyToken: String) = {
+    println(s"msg: $msg")
+    println(s"replyToken: $replyToken")
+    println(s"url: $ReplyUrl")
+
     ws
       .url(ReplyUrl)
       .withHttpHeaders(

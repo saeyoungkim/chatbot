@@ -19,6 +19,9 @@ class EchoService @Inject()(
 ){
   def echo(req: Request[WebhookEvent]): Future[Unit] = {
     if(lineVerifier.validateLineSignature(req)) {
+      println("Line-X-Signature verified!!")
+      println(req.body.toString)
+
       val process = req.body.events.map { event =>
         replyRepositoryWS.sendEchoTextReply(event.message.get.text.get, event.replyToken.get)
       }

@@ -3,6 +3,9 @@ name := "chatbot_btd"
 lazy val root:Project = (project in file("."))
   .enablePlugins(PlayScala)
   .settings(
-    libraryDependencies += guice,
+    libraryDependencies ++= Seq(
+      guice,
+      ws
+    ),
     PlayKeys.playDefaultPort := 9191
   )

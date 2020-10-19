@@ -2,6 +2,7 @@ package utils
 
 object ConfPath {
   object Line {
-    val ChannelSecretPath = "line.channel.secret"
+    final val ChannelSecretPath = "line.channel.secret"
+    final val ReplyUrlPath = "line.reply.url"
   }
 }

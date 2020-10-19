@@ -54,6 +54,7 @@ class LineVerifier @Inject()(
     val key: SecretKeySpec = new SecretKeySpec(ChannelSecret.getBytes(), hmacSHA256)
     val mac: Mac = Mac.getInstance(hmacSHA256)
     mac.init(key)
+    println(Json.stringify(Json.toJson(request.body)))
     val source: Array[Byte] = Json.stringify(Json.toJson(request.body)).getBytes(StandardCharsets.UTF_8)
     val signature: String = Base64.getEncoder.encodeToString(mac.doFinal(source))
 

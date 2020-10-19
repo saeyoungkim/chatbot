@@ -20,8 +20,7 @@ class WebhookController @Inject()(
     logger.info("message received")
 
     echoService.echo(req)
-      .map { _ =>
-        Ok(
+      .map { _ => Ok(
           JsObject(Seq("status" -> JsNumber(OK)))
         )
       }

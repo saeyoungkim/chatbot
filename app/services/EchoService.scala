@@ -9,7 +9,6 @@ import utils.LineVerifier
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
-import scala.util.{Failure, Success}
 
 class EchoService @Inject()(
   lineVerifier: LineVerifier,

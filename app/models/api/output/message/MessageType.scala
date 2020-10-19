@@ -1,10 +1,10 @@
 package models.api.output.message
 
-import utils.props.enums.{Enum, EnumsReadableString}
+import utils.props.enums.{Enum, EnumsWritableString}
 
 sealed abstract class MessageType(val code: String) extends Enum[String]
 
-object MessageType extends EnumsReadableString[MessageType] {
+object MessageType extends EnumsWritableString[MessageType] {
 
   case object Message extends MessageType("message")
 

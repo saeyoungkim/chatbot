@@ -1,9 +1,10 @@
 package services
 
 import javax.inject.Inject
+import javax.xml.bind.ValidationException
 import models.api.input.WebhookEvent
-import play.api.libs.json.{JsNumber, JsObject, Json}
-import play.api.mvc.Request
+import play.api.libs.json.{JsError, JsNumber, JsSuccess, Json}
+import play.api.mvc.{AnyContent, Request}
 import repositories.ws.ReplyRepositoryWS
 import utils.LineVerifier
 
@@ -16,13 +17,20 @@ class EchoService @Inject()(
 )(
   implicit val ec: ExecutionContext
 ){
-  def echo(req: Request[WebhookEvent]): Future[Unit] = {
-    if(lineVerifier.validateLineSignature(req)) {
+  def echo()(implicit req: Request[AnyContent]): Future[Unit] = {
+    if(lineVerifier.validateSignature) {
       println("Line-X-Signature verified!!")
       println(req.body.toString)
 
-      val process = req.body.events.map { event =>
-        replyRepositoryWS.sendEchoTextReply(event.message.get.text.get, event.replyToken.get)
+      val process = req.body.asJson.map {
+        _.validate[WebhookEvent] match {
+          case JsSuccess(webhookEvent, _) => webhookEvent.events.map { event =>
+            replyRepositoryWS.sendEchoTextReply(event.message.get.text.get, event.replyToken.get)
+          }
+          case JsError(_) => throw new ValidationException("invalid body as WebhookEvent json type")
+        }
+      } getOrElse {
+        throw new IllegalArgumentException("invalid request body as json")
       }
 
       val result = Future.sequence(process)

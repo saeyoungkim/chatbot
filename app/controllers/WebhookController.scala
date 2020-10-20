@@ -16,15 +16,13 @@ class WebhookController @Inject()(
 ) extends AbstractController(cc) {
   private val logger = Logger(this.getClass)
 
-  def webhook() = Action.async(parse.json[WebhookEvent]) { implicit req =>
+  def webhook() = Action.async { implicit req =>
     logger.info("message received")
 
-    echoService.echo(req)
-      .map { _ => Ok(
+    echoService.echo.map { _ => Ok(
           JsObject(Seq("status" -> JsNumber(OK)))
         )
-      }
-      .recover {
+    } recover {
         case NonFatal(ex) => BadRequest(
           JsObject(
             Seq("status" -> JsNumber(BAD_REQUEST), "message" -> JsString(ex.getMessage))

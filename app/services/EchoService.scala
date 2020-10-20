@@ -20,7 +20,6 @@ class EchoService @Inject()(
   def echo()(implicit req: Request[AnyContent]): Future[Unit] = {
     if(lineVerifier.validateSignature) {
       println("Line-X-Signature verified!!")
-      println(req.body.toString)
 
       val process = req.body.asJson.map {
         _.validate[WebhookEvent] match {

@@ -1,7 +1,6 @@
 package controllers
 
 import javax.inject.Inject
-import models.api.input.WebhookEvent
 import play.api.Logger
 import play.api.libs.json.{JsNumber, JsObject, JsString}
 import play.api.mvc.{AbstractController, ControllerComponents}

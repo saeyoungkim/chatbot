@@ -18,7 +18,7 @@ class ReplyRepositoryWS @Inject()(
 )(
   implicit val ec: ExecutionContext
 ) {
-  final private val ChannelSecret = conf.get[String](ConfPath.Line.ChannelSecretPath)
+  final private val AccessToken = conf.get[String](ConfPath.Line.AccessToken)
   final private val ReplyUrl = conf.get[String](ConfPath.Line.ReplyUrlPath)
 
   def sendEchoTextReply(msg: String, replyToken: String) = {
@@ -30,7 +30,7 @@ class ReplyRepositoryWS @Inject()(
       .url(ReplyUrl)
       .withHttpHeaders(
         CONTENT_TYPE -> APPLICATION_JSON,
-        AUTHORIZATION -> lineAuthorization(ChannelSecret)
+        AUTHORIZATION -> lineAuthorization(AccessToken)
       )
       .post(jsonReply)
   }

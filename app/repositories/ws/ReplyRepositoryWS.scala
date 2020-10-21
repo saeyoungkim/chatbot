@@ -22,17 +22,18 @@ class ReplyRepositoryWS @Inject()(
   final private val ReplyUrl = conf.get[String](ConfPath.Line.ReplyUrlPath)
 
   def sendEchoTextReply(msg: String, replyToken: String) = {
-    val jsonReply = Json.toJson(ReplyMessage(replyToken, Seq(Message(MessageType.Message, msg)), Some(false)))
-
-    println(jsonReply)
-
     ws
       .url(ReplyUrl)
       .withHttpHeaders(
         CONTENT_TYPE -> APPLICATION_JSON,
         AUTHORIZATION -> lineAuthorization(AccessToken)
       )
-      .post(jsonReply)
+      .post(
+        Json.toJson(
+          ReplyMessage(replyToken, Seq(Message(MessageType.Text, msg)), Some(false)
+          )
+        )
+      )
       .map(res => println(res.body))
   }
 }

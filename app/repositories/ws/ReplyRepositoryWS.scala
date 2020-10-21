@@ -33,5 +33,6 @@ class ReplyRepositoryWS @Inject()(
         AUTHORIZATION -> lineAuthorization(AccessToken)
       )
       .post(jsonReply)
+      .map(res => println(res.body))
   }
 }

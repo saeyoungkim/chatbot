@@ -34,6 +34,5 @@ class ReplyRepositoryWS @Inject()(
           )
         )
       )
-      .map(res => println(res.body))
   }
 }
